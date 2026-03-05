@@ -8,10 +8,10 @@ namespace Coursera.Domain.Entities
 {
     public class Cart : BaseEntity
     {
-        public Guid UserId { get; private set; }
-        public DateTime CreatedAt { get; private set; }
+        public Guid UserId { get;  set; }
+        public DateTime CreatedAt { get;  set; }
 
-        public ICollection<CartItem> Items { get; private set; } = new List<CartItem>();
+        public ICollection<CartItem> Items { get;  set; } = new List<CartItem>();
 
         private Cart() { }
         public Cart(Guid userId)

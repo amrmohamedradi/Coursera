@@ -18,7 +18,7 @@ namespace Coursera.Application.Features.Categories.Queries
 
         public async Task<List<CategoryDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
-            return  await _context.Categories.Select(c => new CategoryDto(c.Id, c.Name, c.ImagePath)).ToListAsync(, cancellationToken);
+            return  await _context.Categories.Select(c => new CategoryDto(c.Id, c.Name, c.ImagePath)).ToListAsync( cancellationToken);
 
         }
     }

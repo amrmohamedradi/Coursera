@@ -4,9 +4,10 @@ namespace Coursera.Domain.Entities
 {
     public class CartItem :BaseEntity
     {
-        public Guid CartId { get; private set; }
-        public Guid CourseId { get; private set; }
-        public decimal Price { get; private set; }
+        public Guid CartId { get;  set; }
+        public Guid CourseId { get;  set; }
+        public decimal Price { get;  set; }
+        public Course Course { get; set; }
         private CartItem() { }
         public CartItem(Guid cartId, Guid courseId, decimal price)
         {
