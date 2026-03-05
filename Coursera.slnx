@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Coursera.Api/Coursera.Api.csproj" />
+  <Project Path="Coursera.Application/Coursera.Application.csproj" />
+  <Project Path="Coursera.Domain/Coursera.Domain.csproj" />
+  <Project Path="Coursera.Infrastructure/Coursera.Infrastructure.csproj" />
+</Solution>
