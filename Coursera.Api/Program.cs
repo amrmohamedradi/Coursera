@@ -1,3 +1,4 @@
+using Coursera.Api.Middlewares;
 using Coursera.Application;
 using Coursera.Application.Common.Models;
 using Coursera.Infrastructure;
@@ -53,6 +54,7 @@ using(var scope = app.Services.CreateScope())
     var userManager = service.GetRequiredService<UserManager<ApplicationUser>>();
     await RoleSeeder.SeedAsync(roleManager, userManager);
 }
+app.UseMiddleware<ExceotionMiddlewares>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

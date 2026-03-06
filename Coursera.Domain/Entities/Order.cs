@@ -16,7 +16,7 @@ namespace Coursera.Domain.Entities
 
 
         private Order() { }
-        public Order(Guid userId,List<OrderItem> cartItems)
+        public Order(Guid userId,List<CartItem> cartItems)
         {
             UserId = userId;
             CreatedAt = DateTime.UtcNow;

@@ -24,7 +24,7 @@ namespace Coursera.Domain.Entities
         {
             if(Items.Any(i => i.CourseId == courseId))
                 throw new InvalidOperationException("Course is already in the cart.");
-            Items.Add(new CartItem(Id,courseId, price));
+            Items.Add(new CartItem(Id, courseId, price));
         }
 
         public void RemoveItem(Guid courseId)
