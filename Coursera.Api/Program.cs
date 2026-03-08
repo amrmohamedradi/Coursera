@@ -41,7 +41,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-       options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowAll", policy =>
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader());
@@ -65,6 +65,7 @@ using(var scope = app.Services.CreateScope())
 app.UseMiddleware<ExceotionMiddlewares>();
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 

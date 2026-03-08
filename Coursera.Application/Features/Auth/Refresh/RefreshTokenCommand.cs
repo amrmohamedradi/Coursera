@@ -1,3 +1,4 @@
+using Coursera.Application.Features.Auth;
 using MediatR;
 
 namespace Coursera.Application.Features.Auth.Refresh

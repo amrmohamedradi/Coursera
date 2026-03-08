@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Coursera.Application.Common.DTOs
 {
     public class RefreshTokenRequest
     {
-        public string RefreshToken { get; set; }
+        public string Email { get; set; } = default!;
+        public string RefreshToken { get; set; } = default!;
     }
 }

@@ -1,7 +1,5 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Coursera.Application.Features.Auth;
+using MediatR;
 
 namespace Coursera.Application.Features.Auth.Login
 {
