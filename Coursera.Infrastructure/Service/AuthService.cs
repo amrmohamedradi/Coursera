@@ -1,4 +1,5 @@
 ﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using Coursera.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +25,7 @@ namespace Coursera.Infrastructure.Service
             var user = new ApplicationUser(firstName, lastName, email, email);
             var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
-                throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
+                throw new ValidationException(string.Join(",", result.Errors.Select(e => e.Description)));
 
             await _userManager.AddToRoleAsync(user, "User");
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
@@ -40,7 +41,7 @@ namespace Coursera.Infrastructure.Service
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, password))
-                throw new Exception("Invalid email or password.");
+                throw new UnauthorizedException("Invalid email or password.");
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
 
             return new UserTokenDto
@@ -55,27 +56,27 @@ namespace Coursera.Infrastructure.Service
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
-                throw new Exception("User not found.");
+                throw new NotFoundException("User not found.");
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
-                throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
+                throw new ValidationException(string.Join(",", result.Errors.Select(e => e.Description)));
         }
 
         public async Task<UserTokenDto> RefreshTokenAsync(string email, string refreshToken)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                throw new Exception("Invalid refresh token.");
+                throw new UnauthorizedException("Invalid refresh token.");
 
             if (user.RefreshToken != refreshToken)
-                throw new Exception("Invalid refresh token.");
+                throw new UnauthorizedException("Invalid refresh token.");
 
             if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                throw new Exception("Refresh token expired.");
+                throw new UnauthorizedException("Refresh token expired.");
 
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
             return new UserTokenDto

@@ -24,7 +24,7 @@ namespace Coursera.Application.Features.Instructors.Commands.DeleteInstructor
                 throw new NotFoundException("Instructor not found");
             var hasCourses = await _context.Courses.AnyAsync(c => c.InstructorId == request.Id, cancellationToken);
             if (hasCourses)
-                throw new Exception("Cannot delete instructor with courses");
+                throw new ValidationException("Cannot delete instructor with courses");
             _context.Instructors.Remove(instructor);
             await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;

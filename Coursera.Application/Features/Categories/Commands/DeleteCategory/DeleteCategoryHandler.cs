@@ -23,7 +23,7 @@ namespace Coursera.Application.Features.Categories.Commands.DeleteCategory
                 throw new NotFoundException("Category not found");
             var hasCourses = await _context.Courses.AnyAsync(c => c.CategoryId == request.Id, cancellationToken);
             if (hasCourses)
-                throw new Exception("Cannot delete category with courses");
+                throw new ValidationException("Cannot delete category with courses");
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;

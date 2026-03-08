@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Coursera.Application.Common.Exceptions;
 
 namespace Coursera.Api.Middlewares
 {
@@ -22,7 +23,14 @@ namespace Coursera.Api.Middlewares
             {
                 _logger.LogError(ex, ex.Message);
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                context.Response.StatusCode = ex switch
+                {
+                    ValidationException => (int)HttpStatusCode.BadRequest,
+                    UnauthorizedException => (int)HttpStatusCode.Unauthorized,
+                    NotFoundException => (int)HttpStatusCode.NotFound,
+                    _ => (int)HttpStatusCode.InternalServerError
+                };
                 var response = new
                 {
                     message = ex.Message

@@ -1,6 +1,5 @@
 ﻿using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
-using Coursera.Application.Features.Courses.Commands.UpdateCourse;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -30,6 +29,13 @@ namespace Coursera.Application.Features.Courses.Commands.DeleteCourse
             {
                 _logger.LogWarning("Course {CourseId} not found", request.Id);
                 throw new NotFoundException("Course not found");
+            }
+
+            var isPurchased = await _context.OrderItems.AnyAsync(oi => oi.CourseId == request.Id, cancellationToken);
+            if (isPurchased)
+            {
+                _logger.LogWarning("Course {CourseId} cannot be deleted because it was purchased", request.Id);
+                throw new ValidationException("Cannot delete course because it was purchased");
             }
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync(cancellationToken);
