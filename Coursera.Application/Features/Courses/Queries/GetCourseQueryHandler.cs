@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Coursera.Domain.Entities;
+using MediatR;
 
 namespace Coursera.Application.Features.Courses.Queries
 {
-    public class GetCourseQueryHandler
+    public class GetCourseQueryHandler : IRequestHandler<GetCourseQuery, PaginatedList<CourseDto>> 
     {
         private readonly IApplicationDbContext _context;
         public GetCourseQueryHandler(IApplicationDbContext context)

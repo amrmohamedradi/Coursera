@@ -15,5 +15,8 @@ namespace Coursera.Application.Common.Interfaces
         Task<UserTokenDto> LoginAsync(
             string email,
             string password);
+
+        Task SetRefreshTokenAsync(Guid userId, string refreshToken, DateTime refreshTokenExpiryTime);
+        Task<UserTokenDto> RefreshTokenAsync(string email, string refreshToken);
     }
 }

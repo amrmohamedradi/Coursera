@@ -1,4 +1,6 @@
-﻿using Coursera.Application.Features.Auth.Login;
+﻿using Coursera.Application.Common.Models;
+using Coursera.Application.Features.Auth.Login;
+using Coursera.Application.Features.Auth.Refresh;
 using Coursera.Application.Features.Auth.Register;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +22,20 @@ namespace Coursera.Api.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
             var user = await _mediator.Send(command);
-            return Ok(user);
+            return Ok(new ApiResponse<object?>(user));
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
             var user = await _mediator.Send(command);
-            return Ok(user);
+            return Ok(new ApiResponse<object?>(user));
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(new ApiResponse<object?>(result));
         }
     }
 }

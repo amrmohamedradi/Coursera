@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,7 +23,7 @@ namespace Coursera.Application.Features.Carts.Commands.RemoveCart
                 .Include(c => c.Items)
                 .FirstOrDefaultAsync(c => c.UserId == request.UserId, cancellationToken);
             if (cart == null)
-                throw new Exception("Cart not found");
+                throw new NotFoundException("Cart not found");
             cart.RemoveItem(request.CourseId);
             await _context.SaveChangesAsync(cancellationToken);
         }

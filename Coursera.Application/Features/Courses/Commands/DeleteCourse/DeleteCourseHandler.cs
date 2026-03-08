@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Application.Features.Courses.Commands.UpdateCourse;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ namespace Coursera.Application.Features.Courses.Commands.DeleteCourse
             if (course == null)
             {
                 _logger.LogWarning("Course {CourseId} not found", request.Id);
-                throw new Exception("Course not found");
+                throw new NotFoundException("Course not found");
             }
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync(cancellationToken);

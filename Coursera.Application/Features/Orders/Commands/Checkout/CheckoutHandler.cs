@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ namespace Coursera.Application.Features.Orders.Commands.Checkout
             if (cart == null || !cart.Items.Any())
             {
                 _logger.LogWarning("Checkout failed for user {UserId} because cart is empty", request.UserId);
-                throw new Exception("Cart is empty");
+                throw new NotFoundException("Cart is empty");
 
             }
             var order = new Order(request.UserId, cart.Items.ToList());

@@ -9,6 +9,8 @@ namespace Coursera.Infrastructure.Identity
     {
         public string FirstName { get;private set; }
         public string LastName { get;private set; }
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
         private ApplicationUser() { }
         public ApplicationUser(string firstName, string lastName, string userName, string email)
         {

@@ -50,5 +50,40 @@ namespace Coursera.Infrastructure.Service
                 Roles = roles
             };
         }
+
+        public async Task SetRefreshTokenAsync(Guid userId, string refreshToken, DateTime refreshTokenExpiryTime)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+                throw new Exception("User not found.");
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
+        }
+
+        public async Task<UserTokenDto> RefreshTokenAsync(string email, string refreshToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                throw new Exception("Invalid refresh token.");
+
+            if (user.RefreshToken != refreshToken)
+                throw new Exception("Invalid refresh token.");
+
+            if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                throw new Exception("Refresh token expired.");
+
+            var roles = (await _userManager.GetRolesAsync(user)).ToList();
+            return new UserTokenDto
+            {
+                Id = user.Id,
+                Email = user.Email!,
+                Roles = roles
+            };
+        }
     }
 }

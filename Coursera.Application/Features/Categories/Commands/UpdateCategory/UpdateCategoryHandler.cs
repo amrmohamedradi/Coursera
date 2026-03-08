@@ -1,4 +1,5 @@
 ﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using Coursera.Domain.Entities;
 using MediatR;
@@ -21,7 +22,7 @@ namespace Coursera.Application.Features.Categories.Commands.UpdateCategory
         {
             var category = await _context.Categories.FirstOrDefaultAsync(i => i.Id == request.Id, cancellationToken);
             if (category == null)
-                throw new Exception("Instructor not found");
+                throw new NotFoundException("Instructor not found");
             category.Update(request.Name, request.ImagePath);
             await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;

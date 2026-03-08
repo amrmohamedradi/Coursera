@@ -39,6 +39,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+       options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
+});
 
 var app = builder.Build();
 
@@ -54,6 +61,7 @@ using(var scope = app.Services.CreateScope())
     var userManager = service.GetRequiredService<UserManager<ApplicationUser>>();
     await RoleSeeder.SeedAsync(roleManager, userManager);
 }
+
 app.UseMiddleware<ExceotionMiddlewares>();
 
 app.UseHttpsRedirection();

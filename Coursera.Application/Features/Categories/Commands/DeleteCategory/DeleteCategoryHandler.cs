@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace Coursera.Application.Features.Categories.Commands.DeleteCategory
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
             if (category == null)
-                throw new Exception("Category not found");
+                throw new NotFoundException("Category not found");
             var hasCourses = await _context.Courses.AnyAsync(c => c.CategoryId == request.Id, cancellationToken);
             if (hasCourses)
                 throw new Exception("Cannot delete category with courses");

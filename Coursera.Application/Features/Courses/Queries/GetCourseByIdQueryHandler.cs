@@ -1,4 +1,5 @@
 ﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace Coursera.Application.Features.Courses.Queries
         {
             var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
             if (course == null)
-                throw new Exception("Course not found");
+                throw new NotFoundException("Course not found");
             return new CourseDto
                 (
                     course.Id, course.Name, course.Description, course.Price,course.Rating,course.CreatedAt, course.Level, course.ImagePath, course.CategoryId, course.InstructorId

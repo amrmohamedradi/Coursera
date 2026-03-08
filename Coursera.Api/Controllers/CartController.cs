@@ -1,8 +1,10 @@
 ﻿using Coursera.Application.Features.Carts.Commands.RemoveCart;
 using Coursera.Application.Features.Carts.Queries.GetCart;
+using Coursera.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Coursera.Api.Controllers
 {
@@ -18,16 +20,17 @@ namespace Coursera.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCart()
         {
-            var userId = Guid.Parse(User.FindFirst("uid")!.Value);
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException("UserId not found in token"));
             var result = await _mediator.Send(new GetCartQuery(userId));
-            return Ok(result);
+            return Ok(new ApiResponse<object?>(result));
         }
         [HttpDelete("{courseId}")]
         public async Task<IActionResult> RemoveFromCart(Guid courseId)
         {
             var userId = Guid.Parse(User.FindFirst("uid")!.Value);
             await _mediator.Send(new RemoveCartCommand(userId,courseId));
-            return NoContent();
+            return Ok(new ApiResponse<object?>(null));
         }
     }
 }

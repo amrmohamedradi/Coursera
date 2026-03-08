@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,7 +20,7 @@ namespace Coursera.Application.Features.Instructors.Commands.UpdateInstructor
         {
             var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.Id == request.Id, cancellationToken);
             if (instructor == null)
-                throw new Exception("Instructor not found");
+                throw new NotFoundException("Instructor not found");
             instructor.Update(request.Name, request.Bio, request.JobTitle, request.ImgagePath);
             await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;

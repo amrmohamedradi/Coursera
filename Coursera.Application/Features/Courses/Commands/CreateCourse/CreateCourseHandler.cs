@@ -17,7 +17,7 @@ namespace Coursera.Application.Features.Courses.Commands.CreateCourse
         public CreateCourseHandler(IApplicationDbContext context, ILogger<CreateCourseHandler> logger)
         {
             _context = context;
-            _logger = looger;
+            _logger = logger;
         }
 
         public async Task<Guid> Handle(CreateCourseCommand request, CancellationToken cancellationToken)

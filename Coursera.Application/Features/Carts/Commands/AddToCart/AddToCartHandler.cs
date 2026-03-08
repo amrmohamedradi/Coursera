@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Application.Features.Courses.Commands.UpdateCourse;
 using Coursera.Domain.Entities;
 using MediatR;
@@ -36,7 +37,7 @@ namespace Coursera.Application.Features.Carts.Commands.AddToCart
             var course = await _context.Courses.FirstOrDefaultAsync(i => i.Id == request.CourseId,cancellationToken);
             if(course == null)
             {
-                throw new Exception("Course not found"); 
+                throw new NotFoundException("Course not found"); 
             }
                 cart.AddItem(course.Id, course.Price);
             await _context.SaveChangesAsync(cancellationToken);

@@ -18,7 +18,7 @@ namespace Coursera.Application.Features.Auth.Register
             RuleFor(x => x.FirstName)
                 .NotEmpty()
                 .MinimumLength(100);
-            RuleFor(x => x.LastNeme)
+            RuleFor(x => x.LastName)
                 .NotEmpty()
                 .MinimumLength(100);
         }

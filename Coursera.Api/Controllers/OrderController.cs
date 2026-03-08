@@ -1,8 +1,10 @@
 ﻿using Coursera.Application.Features.Orders.Commands.Checkout;
+using Coursera.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Coursera.Api.Controllers
 {
@@ -20,17 +22,17 @@ namespace Coursera.Api.Controllers
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout()
         {
-            var userId = Guid.Parse(User.FindFirst("uid").Value);
-            var orderId = await _mediator.Send(new CheckoutCommand(userId));
-            return Ok(orderId);
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                            ?? throw new UnauthorizedAccessException("UserId not found in token")); var orderId = await _mediator.Send(new CheckoutCommand(userId));
+            return Ok(new ApiResponse<Guid>(orderId));
         }
         [HttpGet("Seccess")]
-        public async Tak<IActionResult> PaymentSuccess()
+        public async Task<IActionResult> PaymentSuccess()
         {
-            return Ok(new 
+            return Ok(new ApiResponse<object?>(new
             {
                 message = "Payment completed successfully"
-            });
+            }));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ namespace Coursera.Application.Features.Instructors.Commands.DeleteInstructor
         {
             var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.Id == request.Id, cancellationToken);
             if (instructor == null)
-                throw new Exception("Instructor not found");
+                throw new NotFoundException("Instructor not found");
             var hasCourses = await _context.Courses.AnyAsync(c => c.InstructorId == request.Id, cancellationToken);
             if (hasCourses)
                 throw new Exception("Cannot delete instructor with courses");

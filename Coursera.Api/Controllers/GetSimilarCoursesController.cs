@@ -1,4 +1,5 @@
 ﻿using Coursera.Application.Features.Courses.Queries.GetSimilarCourses;
+using Coursera.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Coursera.Api.Controllers
         {
             var result = await _mediator.Send(new GetSimilarCoursesQuery(Id));
 
-            return Ok(result);
+            return Ok(new ApiResponse<object?>(result));
 
         }
 

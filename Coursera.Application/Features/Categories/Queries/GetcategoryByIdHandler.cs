@@ -1,4 +1,5 @@
 ﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace Coursera.Application.Features.Categories.Queries
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
             if (category == null)
-                throw new Exception("Category not found");
+                throw new NotFoundException("Category not found");
             return new CategoryDto(
                 category.Id, category.Name, category.ImagePath);
         }

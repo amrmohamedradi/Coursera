@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Interfaces;
+﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Application.Features.Auth.Login;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ namespace Coursera.Application.Features.Courses.Commands.UpdateCourse
 
             var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == request.id, cancellationToken);
             if (course == null)
-                throw new Exception("Course not found");
+                throw new NotFoundException("Course not found");
             course.Update(request.Name,request.Description,request.Price,request.Level,request.ImagePath,request.CategoryId,request.InstructorId);
             await _context.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Course {CourseName} updated successfully", request.Name);

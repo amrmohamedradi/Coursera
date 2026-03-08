@@ -1,4 +1,5 @@
 ﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace Coursera.Application.Features.Instructors.Queries
         {
             var instructor = await _context.Instructors.AsNoTracking().FirstOrDefaultAsync(i => i.Id == request.Id,cancellationToken);
             if (instructor == null)
-                throw new Exception("Instructor not found");
+                throw new NotFoundException("Instructor not found");
             return new InstructorDto(
                 instructor.Id,
                 instructor.Name,

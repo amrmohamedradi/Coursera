@@ -1,4 +1,5 @@
-﻿using Coursera.Application.Common.Models;
+﻿using Coursera.Application.Common.Constans;
+using Coursera.Application.Common.Models;
 using Coursera.Application.Features.Courses.Commands.CreateCourse;
 using Coursera.Application.Features.Courses.Commands.DeleteCourse;
 using Coursera.Application.Features.Courses.Commands.UpdateCourse;
@@ -22,15 +23,16 @@ namespace Coursera.Api.Controllers
         public async Task<IActionResult> GetById(Guid Id)
         {
             var course = await _mediator.Send(new GetCourseByIdQuery(Id));
-            return Ok(course);
+            return Ok(new ApiResponse<object?>(course));
         }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
         {
             var result = await _mediator.Send(new GetCourseQuery(pageNumber, pageSize, search));
-            return Ok(result); 
+            return Ok(new ApiResponse<object?>(result)); 
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateCourseRequest request)
         {
@@ -44,9 +46,9 @@ namespace Coursera.Api.Controllers
                 request.Level,
                 request.CategoryId,
                 request.InstructorId));
-            return Ok(id);
+            return Ok(new ApiResponse<Guid>(id));
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateCourseRequest request)
         {
@@ -62,14 +64,14 @@ namespace Coursera.Api.Controllers
                 request.Level,
                 request.CategoryId,
                 request.InstructorId));
-            return NoContent();
+            return Ok(new ApiResponse<object?>(null));
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _mediator.Send(new DeleteCourseCommand(id));
-            return NoContent();
+            return Ok(new ApiResponse<object?>(null));
         }
     }
 }
