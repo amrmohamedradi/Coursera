@@ -28,9 +28,9 @@ namespace Coursera.Application.Features.Auth.Register
         }
         public async Task<AuthResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Regsiter attempt for {Email}", request.Email);
+            _logger.LogInformation("Register attempt for {Email}", request.Email);
             var user = await _authService.RegisterAsync(request.FirstName, request.LastName, request.Email, request.Password);
-            _logger.LogInformation("USer {Email} registered successfully", request.Email);
+            _logger.LogInformation("User {Email} registered successfully", request.Email);
 
             var token = await _jwtService.GenerateTokenAsync(user);
             var refreshToken = _jwtService.GenerateRefreshToken();

@@ -4,11 +4,11 @@ using Coursera.Application.Common.Exceptions;
 
 namespace Coursera.Api.Middlewares
 {
-    public class ExceotionMiddlewares
+    public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ExceotionMiddlewares> _logger;
-        public ExceotionMiddlewares(RequestDelegate next, ILogger<ExceotionMiddlewares> logger)
+        private readonly ILogger<ExceptionMiddleware> _logger;
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;

@@ -7,6 +7,8 @@ namespace Coursera.Domain.Entities
 {
     public class Order:BaseEntity
     {
+        private const decimal TaxRate = 0.1m;
+
         public Guid UserId { get;private set; }
         public decimal Tax { get; private set; }
         public decimal FinalPrice { get; private set; }
@@ -25,7 +27,7 @@ namespace Coursera.Domain.Entities
                 Items.Add(new OrderItem(Id, item.CourseId, item.Price));
             }
                 TotalPrice = Items.Sum(i => i.Price);
-                Tax = TotalPrice * 0.1m; 
+                Tax = TotalPrice * TaxRate; 
                 FinalPrice = TotalPrice + Tax;
         }
     }

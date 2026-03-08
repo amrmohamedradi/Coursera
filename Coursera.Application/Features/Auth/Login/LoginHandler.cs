@@ -33,7 +33,7 @@ namespace Coursera.Application.Features.Auth.Login
             var refreshToken = _jwtService.GenerateRefreshToken();
             var refreshExpiry = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenDurationInDays);
             await _authService.SetRefreshTokenAsync(user.Id, refreshToken, refreshExpiry);
-            _logger.LogInformation("USer {Email} Logged successfully", request.Email);
+            _logger.LogInformation("User {Email} logged successfully", request.Email);
 
             return new AuthResponse
             {
