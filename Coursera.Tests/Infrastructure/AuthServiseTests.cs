@@ -10,6 +10,7 @@ using Xunit;
 using MockQueryable.Moq;
 using System.Linq;
 using System.Collections.Generic;
+using Coursera.Domain.Entities;
 
 namespace Coursera.Tests.Infrastructure;
 public class AuthServiceTests
@@ -59,10 +60,10 @@ public class AuthServiceTests
     public async Task RefreshTokenAsync_Should_Return_New_Token_When_Token_Is_Valid()
     {
         var user = new ApplicationUser("Test", "User", "Test", "test@test.com");
-        var users = new List<ApplicationUser> { user }.AsQueryable().BuildMock();
+        var usersMock = new List<ApplicationUser> { user }.BuildMockDbSet();
         
         _userManagerMock.Setup(x => x.Users)
-            .Returns(users);
+            .Returns(usersMock.Object);
         _userManagerMock.Setup(x => x.UpdateAsync(user))
             .ReturnsAsync(IdentityResult.Success);
         var refreshToken = "valid-refresh-token";

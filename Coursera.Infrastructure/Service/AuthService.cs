@@ -1,6 +1,7 @@
 using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
+using Coursera.Domain.Entities;
 using Coursera.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

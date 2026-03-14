@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Coursera.Domain.Entities;
 
 namespace Coursera.Infrastructure.Identity
 {
