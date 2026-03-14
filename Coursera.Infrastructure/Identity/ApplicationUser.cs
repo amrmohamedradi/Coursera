@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,8 +9,7 @@ namespace Coursera.Infrastructure.Identity
     {
         public string FirstName { get;private set; }
         public string LastName { get;private set; }
-        public string? RefreshToken { get; set; }
-        public DateTime RefreshTokenExpiryTime { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         private ApplicationUser() { }
         public ApplicationUser(string firstName, string lastName, string userName, string email)
         {

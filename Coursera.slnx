@@ -3,4 +3,5 @@
   <Project Path="Coursera.Application/Coursera.Application.csproj" />
   <Project Path="Coursera.Domain/Coursera.Domain.csproj" />
   <Project Path="Coursera.Infrastructure/Coursera.Infrastructure.csproj" />
+  <Project Path="Coursera.Tests/Coursera.Tests.csproj" Id="2bc9d0a8-3891-4ec4-a7e0-dcdf3e149d74" />
 </Solution>

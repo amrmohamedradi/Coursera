@@ -1,8 +1,9 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using Coursera.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,12 +55,16 @@ namespace Coursera.Infrastructure.Service
 
         public async Task SetRefreshTokenAsync(Guid userId, string refreshToken, DateTime refreshTokenExpiryTime)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
                 throw new NotFoundException("User not found.");
 
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
+            user.RefreshTokens.Add(new RefreshToken
+            {
+                Token = refreshToken,
+                ExpiryDate = refreshTokenExpiryTime,
+                IsRevoked = false
+            });
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
@@ -68,15 +73,18 @@ namespace Coursera.Infrastructure.Service
 
         public async Task<UserTokenDto> RefreshTokenAsync(string email, string refreshToken)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
                 throw new UnauthorizedException("Invalid refresh token.");
 
-            if (user.RefreshToken != refreshToken)
-                throw new UnauthorizedException("Invalid refresh token.");
+            var activeToken = user.RefreshTokens.FirstOrDefault(t => t.Token == refreshToken);
+            
+            if (activeToken == null || !activeToken.IsActive)
+                throw new UnauthorizedException("Invalid or expired refresh token.");
 
-            if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                throw new UnauthorizedException("Refresh token expired.");
+            // Revoke the old token now that it has been consumed for a refresh rotation
+            activeToken.IsRevoked = true;
+            await _userManager.UpdateAsync(user);
 
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
             return new UserTokenDto

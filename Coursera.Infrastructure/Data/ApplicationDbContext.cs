@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.Interfaces;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Domain.Entities;
 using Coursera.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -24,6 +24,7 @@ namespace Coursera.Infrastructure.Data
         public DbSet<CartItem> CartItems => Set<CartItem>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems=> Set<OrderItem>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

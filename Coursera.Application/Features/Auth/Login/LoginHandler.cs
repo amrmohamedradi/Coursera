@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Coursera.Application.Features.Auth.Login
 {
-    internal class LoginHandler : IRequestHandler<LoginCommand, AuthResponse>
+    public class LoginHandler : IRequestHandler<LoginCommand, AuthResponse>
     {
         private readonly IAuthService _authService;
         private readonly IJwtService _jwtService;
