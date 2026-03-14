@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Interfaces;
 using Coursera.Application.Common.Models;
 using MediatR;
@@ -18,7 +18,7 @@ namespace Coursera.Application.Features.Instructors.Queries
         }
         public async Task<PaginatedList<InstructorDto>> Handle(GetInstructorQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.Instructors.AsQueryable();
+            var query = _context.Instructors.AsNoTracking().AsQueryable();
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
                 query = query.Where(i => i.Name.Contains(request.Search));

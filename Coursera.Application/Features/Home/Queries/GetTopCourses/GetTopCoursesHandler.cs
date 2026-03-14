@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +19,7 @@ namespace Coursera.Application.Features.Home.Queries.GetTopCourses
 
         public async Task<List<CourseDto>> Handle(GetTopCoursesQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Courses.OrderByDescending(c => c.CreatedAt)
+            return await _context.Courses.AsNoTracking().OrderByDescending(c => c.CreatedAt)
                 .Take(6)
                 .Select(i => new CourseDto(
                 i.Id,

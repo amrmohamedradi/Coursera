@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +19,7 @@ namespace Coursera.Application.Features.Home.Queries.GetTopInstroctors
         public async Task<List<InstructorDto>> Handle(GetTopinstructorsQuery request, CancellationToken cancellationToken)
         {
             return await _context.Instructors
+                .AsNoTracking()
                 .Take(6)
                 .Select(i => new InstructorDto(
                 i.Id,

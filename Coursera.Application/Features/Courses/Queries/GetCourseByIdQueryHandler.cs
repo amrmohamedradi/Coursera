@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
@@ -18,7 +18,7 @@ namespace Coursera.Application.Features.Courses.Queries
         }
         public async Task<CourseDto> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+            var course = await _context.Courses.AsNoTracking().FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
             if (course == null)
                 throw new NotFoundException("Course not found");
             return new CourseDto

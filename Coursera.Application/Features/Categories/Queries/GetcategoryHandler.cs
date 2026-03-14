@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ namespace Coursera.Application.Features.Categories.Queries
 
         public async Task<List<CategoryDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
-            return  await _context.Categories.Select(c => new CategoryDto(c.Id, c.Name, c.ImagePath)).ToListAsync( cancellationToken);
+            return  await _context.Categories.AsNoTracking().Select(c => new CategoryDto(c.Id, c.Name, c.ImagePath)).ToListAsync( cancellationToken);
 
         }
     }

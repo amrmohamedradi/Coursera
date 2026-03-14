@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +21,7 @@ namespace Coursera.Application.Features.Carts.Queries.GetCart
         public async Task<CartDto> Handle(GetCartQuery request, CancellationToken cancellationToken)
         {
             var cart = await _context.Carts
+                .AsNoTracking()
                 .Include( c=> c.Items)
                 .ThenInclude(i => i.Course)
                 .FirstOrDefaultAsync(c => c.UserId == request.UserId,cancellationToken);

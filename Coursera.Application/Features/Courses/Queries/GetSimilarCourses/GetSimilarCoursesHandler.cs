@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +19,11 @@ namespace Coursera.Application.Features.Courses.Queries.GetSimilarCourses
 
         public async Task<List<CourseDto>> Handle(GetSimilarCoursesQuery request, CancellationToken cancellationToken)
         {
-            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == request.CourseId, cancellationToken);
+            var course = await _context.Courses.AsNoTracking().FirstOrDefaultAsync(c => c.Id == request.CourseId, cancellationToken);
             if (course == null) 
                 return new List<CourseDto>();
             return await _context.Courses
+                .AsNoTracking()
                 .Where(c => c.CategoryId==course.CategoryId && c.Id != request.CourseId)
                 .OrderByDescending(c=> c.CreatedAt)
                 .Take(4)
