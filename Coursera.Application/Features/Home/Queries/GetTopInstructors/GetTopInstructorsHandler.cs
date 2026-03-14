@@ -6,17 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Coursera.Application.Features.Home.Queries.GetTopInstroctors
+namespace Coursera.Application.Features.Home.Queries.GetTopInstructors
 {
-    public class GetTopInstructorHandler : IRequestHandler<GetTopinstructorsQuery,List<InstructorDto>>
+    public class GetTopInstructorsHandler : IRequestHandler<GetTopInstructorsQuery,List<InstructorDto>>
     {
         private readonly IApplicationDbContext _context;
-        public GetTopInstructorHandler(IApplicationDbContext context)
+        public GetTopInstructorsHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<List<InstructorDto>> Handle(GetTopinstructorsQuery request, CancellationToken cancellationToken)
+        public async Task<List<InstructorDto>> Handle(GetTopInstructorsQuery request, CancellationToken cancellationToken)
         {
             return await _context.Instructors
                 .AsNoTracking()

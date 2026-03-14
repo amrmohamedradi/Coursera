@@ -1,6 +1,6 @@
-﻿using Coursera.Application.Features.Home.Queries.GetTopCategories;
+using Coursera.Application.Features.Home.Queries.GetTopCategories;
 using Coursera.Application.Features.Home.Queries.GetTopCourses;
-using Coursera.Application.Features.Home.Queries.GetTopInstroctors;
+using Coursera.Application.Features.Home.Queries.GetTopInstructors;
 using Coursera.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -31,9 +31,9 @@ namespace Coursera.Api.Controllers
             return Ok(new ApiResponse<object?>(result));
         }
         [HttpGet("top-Instructor")]
-        public async Task<IActionResult> GetTopInstructor()
+        public async Task<IActionResult> GetTopInstructors()
         {
-            var result = await _mediator.Send(new GetTopinstructorsQuery());
+            var result = await _mediator.Send(new GetTopInstructorsQuery());
             return Ok(new ApiResponse<object?>(result));
         }
         

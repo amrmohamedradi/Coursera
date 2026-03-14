@@ -1,6 +1,6 @@
-﻿using Coursera.Application.Common.Constans;
+using Coursera.Application.Common.Constans;
 using Coursera.Application.Common.Models;
-using Coursera.Application.Features.Dashboard.Queries.GetDashbord;
+using Coursera.Application.Features.Dashboard.Queries.GetDashboard;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +19,9 @@ namespace Coursera.Api.Controllers
             _mediator = mediator;
         }
         [HttpGet]
-        public async Task<IActionResult> GetDashcoard()
+        public async Task<IActionResult> GetDashboard()
         {
-            var result = await _mediator.Send(new GetDashbordQuery());
+            var result = await _mediator.Send(new GetDashboardQuery());
             return Ok(new ApiResponse<object?>(result));
         }
     }

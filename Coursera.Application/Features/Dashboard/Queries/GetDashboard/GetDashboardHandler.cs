@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.DTOs;
+using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,30 +6,30 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Coursera.Application.Features.Dashboard.Queries.GetDashbord
+namespace Coursera.Application.Features.Dashboard.Queries.GetDashboard
 {
-    public class GetDashbordHandler : IRequestHandler<GetDashbordQuery,DashbordDto>
+    public class GetDashboardHandler : IRequestHandler<GetDashboardQuery,DashboardDto>
     {
         private readonly IApplicationDbContext _context;
-        public GetDashbordHandler(IApplicationDbContext context)
+        public GetDashboardHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<DashbordDto> Handle(GetDashbordQuery request, CancellationToken cancellationToken)
+        public async Task<DashboardDto> Handle(GetDashboardQuery request, CancellationToken cancellationToken)
         {
             var coursesCount = await _context.Courses.CountAsync(cancellationToken);
             var categoriesCount = await _context.Categories.CountAsync(cancellationToken);
             var instructorsCount = await _context.Instructors.CountAsync(cancellationToken);
-            var startOfManth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month,1);
-            var manthySales = 0;
+            var startOfMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month,1);
+            var monthlySales = 0;
 
-            return new DashbordDto
+            return new DashboardDto
             {
                 CoursesCount = coursesCount,
                 CategoriesCount = categoriesCount,
                 InstructorsCount = instructorsCount,
-                ManthlySales = manthySales
+                MonthlySales = monthlySales
             };
         }
     }
