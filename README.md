@@ -283,8 +283,3 @@ Contributions are what make the open source community such an amazing place to l
 
 **Repository:** [https://github.com/amrmohamedradi/Coursera](https://github.com/amrmohamedradi/Coursera)
 
----
-
-<div align="center">
-  <i>Built with ❤️ for passionate developers and lifelong learners.</i>
-</div>
