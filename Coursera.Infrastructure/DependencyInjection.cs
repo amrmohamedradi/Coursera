@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.Interfaces;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Application.Interfaces;
 using Coursera.Infrastructure.Data;
 using Coursera.Infrastructure.Identity;

@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.Constans;
+using Coursera.Application.Common.Constans;
 using Coursera.Application.Common.Models;
 using Coursera.Application.Features.Courses.Commands.CreateCourse;
 using Coursera.Application.Features.Courses.Commands.DeleteCourse;

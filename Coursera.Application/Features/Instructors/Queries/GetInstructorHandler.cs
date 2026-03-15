@@ -21,7 +21,7 @@ namespace Coursera.Application.Features.Instructors.Queries
             var query = _context.Instructors.AsNoTracking().AsQueryable();
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
-                query = query.Where(i => i.Name.Contains(request.Search));
+                query = query.Where(i => i.Name.Contains(request.Search) || i.JobTitle.ToString().Contains(request.Search));
             }
             var totalCount = await query.CountAsync(cancellationToken);
             var items = await query.OrderByDescending(i => i.Name).Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).Select(i => new InstructorDto(

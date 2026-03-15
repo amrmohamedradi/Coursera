@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Features.Orders.Commands.Checkout;
+using Coursera.Application.Features.Orders.Commands.Checkout;
 using Coursera.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +26,7 @@ namespace Coursera.Api.Controllers
                             ?? throw new UnauthorizedAccessException("UserId not found in token")); var orderId = await _mediator.Send(new CheckoutCommand(userId));
             return Ok(new ApiResponse<Guid>(orderId));
         }
-        [HttpGet("Seccess")]
+        [HttpGet("Success")]
         public async Task<IActionResult> PaymentSuccess()
         {
             return Ok(new ApiResponse<object?>(new

@@ -8,11 +8,8 @@ namespace Coursera.Domain.Entities
         public string Token { get; set; } = null!;
         public DateTime ExpiryDate { get; set; }
         public bool IsRevoked { get; set; }
-
         public Guid UserId { get; set; }
-        // The foreign key relation to ApplicationUser will be handled via FluentAPI
-        // since ApplicationUser sits in the Infrastructure layer, we can't reference it here.
-        
+        public Guid? ApplicationUserId { get; set; }
         public bool IsActive => !IsRevoked && ExpiryDate > DateTime.UtcNow;
     }
 }

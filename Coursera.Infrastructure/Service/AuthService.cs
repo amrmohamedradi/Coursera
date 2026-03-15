@@ -2,6 +2,7 @@ using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using Coursera.Domain.Entities;
+using Coursera.Infrastructure.Data;
 using Coursera.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,11 @@ namespace Coursera.Infrastructure.Service
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public AuthService(UserManager<ApplicationUser> userManager)
+        private readonly ApplicationDbContext _context;
+        public AuthService(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
 
 
@@ -56,20 +59,21 @@ namespace Coursera.Infrastructure.Service
 
         public async Task SetRefreshTokenAsync(Guid userId, string refreshToken, DateTime refreshTokenExpiryTime)
         {
-            var user = await _userManager.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
                 throw new NotFoundException("User not found.");
 
-            user.RefreshTokens.Add(new RefreshToken
+            var token = new RefreshToken
             {
                 Token = refreshToken,
                 ExpiryDate = refreshTokenExpiryTime,
-                IsRevoked = false
-            });
+                IsRevoked = false,
+                UserId = userId,
+                ApplicationUserId = userId
+            };
 
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-                throw new ValidationException(string.Join(",", result.Errors.Select(e => e.Description)));
+            await _context.RefreshTokens.AddAsync(token);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<UserTokenDto> RefreshTokenAsync(string email, string refreshToken)
@@ -83,9 +87,8 @@ namespace Coursera.Infrastructure.Service
             if (activeToken == null || !activeToken.IsActive)
                 throw new UnauthorizedException("Invalid or expired refresh token.");
 
-            // Revoke the old token now that it has been consumed for a refresh rotation
             activeToken.IsRevoked = true;
-            await _userManager.UpdateAsync(user);
+            await _context.SaveChangesAsync();
 
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
             return new UserTokenDto

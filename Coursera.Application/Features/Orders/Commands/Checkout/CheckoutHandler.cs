@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.Exceptions;
+using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Common.Interfaces;
 using Coursera.Domain.Entities;
 using MediatR;

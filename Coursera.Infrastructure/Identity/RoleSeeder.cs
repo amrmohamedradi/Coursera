@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.Constans;
+using Coursera.Application.Common.Constans;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,8 @@ namespace Coursera.Infrastructure.Identity
             }
 
             var adminEmail = "admin@coursera.com";
-            var existingAdmin = await userManager.FindByNameAsync(adminEmail);
+            var adminUserName = "admin";
+            var existingAdmin = await userManager.FindByNameAsync(adminUserName);
             if (existingAdmin != null) 
                 return;
             

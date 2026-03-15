@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.Models;
+using Coursera.Application.Common.Models;
 using Coursera.Application.Features.Auth.Login;
 using Coursera.Application.Features.Auth.Refresh;
 using Coursera.Application.Features.Auth.Register;
