@@ -8,8 +8,8 @@ namespace Coursera.Infrastructure.Identity
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
-        public string FirstName { get;private set; }
-        public string LastName { get;private set; }
+        public string FirstName { get;private set; } = default!;
+        public string LastName { get;private set; } = default!;
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         private ApplicationUser() { }
         public ApplicationUser(string firstName, string lastName, string userName, string email)

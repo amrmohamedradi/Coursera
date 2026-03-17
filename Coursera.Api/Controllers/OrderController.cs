@@ -27,7 +27,7 @@ namespace Coursera.Api.Controllers
             return Ok(new ApiResponse<Guid>(orderId));
         }
         [HttpGet("Success")]
-        public async Task<IActionResult> PaymentSuccess()
+        public IActionResult PaymentSuccess()
         {
             return Ok(new ApiResponse<object?>(new
             {

@@ -1,29 +1,32 @@
 using Coursera.Application.Common.DTOs;
 using Coursera.Application.Common.Exceptions;
 using Coursera.Application.Interfaces;
+using Coursera.Domain.Entities;
+using Coursera.Infrastructure.Data;
 using Coursera.Infrastructure.Identity;
 using Coursera.Infrastructure.Service;
 using Microsoft.AspNetCore.Identity;
+using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using MockQueryable.Moq;
-using System.Linq;
-using System.Collections.Generic;
-using Coursera.Domain.Entities;
 
 namespace Coursera.Tests.Infrastructure;
 public class AuthServiceTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
+    private readonly ApplicationDbContext _context;
 
-    public AuthServiceTests()
+    public AuthServiceTests(ApplicationDbContext context)
     {
         var store = new Mock<IUserStore<ApplicationUser>>();
 
         _userManagerMock = new Mock<UserManager<ApplicationUser>>(
             store.Object,
             null, null, null, null, null, null, null, null);
+        _context = context;
     }
 
     [Fact]
@@ -40,7 +43,7 @@ public class AuthServiceTests
             .ReturnsAsync(true);
         _userManagerMock.Setup(x => x.GetRolesAsync(user))
             .ReturnsAsync(new List<string> { "User" });
-        var service = new AuthService(_userManagerMock.Object);
+        var service = new AuthService(_userManagerMock.Object,_context);
         var result = await service.LoginAsync(email, password);
         Assert.NotNull(result);
     }
@@ -52,7 +55,7 @@ public class AuthServiceTests
         _userManagerMock
             .Setup(x => x.FindByEmailAsync(email))
             .ReturnsAsync((ApplicationUser)null);
-        var service = new AuthService(_userManagerMock.Object);
+        var service = new AuthService(_userManagerMock.Object, _context);
         await Assert.ThrowsAsync<UnauthorizedException>(() =>
             service.LoginAsync(email, password));
     }
@@ -70,7 +73,8 @@ public class AuthServiceTests
         var refreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
         
         var service = new AuthService(
-            _userManagerMock.Object
+            _userManagerMock.Object,
+            _context
         );
         await service.SetRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiryTime);
         Assert.Single(user.RefreshTokens);

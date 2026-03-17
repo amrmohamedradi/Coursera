@@ -1,4 +1,4 @@
-﻿using Coursera.Domain.Common;
+using Coursera.Domain.Common;
 
 namespace Coursera.Domain.Entities
 {
@@ -7,7 +7,7 @@ namespace Coursera.Domain.Entities
         public Guid CartId { get;  set; }
         public Guid CourseId { get;  set; }
         public decimal Price { get;  set; }
-        public Course Course { get; set; }
+        public Course Course { get; set; } = default!;
         private CartItem() { }
         public CartItem(Guid cartId, Guid courseId, decimal price)
         {

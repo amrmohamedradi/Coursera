@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,7 +20,7 @@ namespace Coursera.Application.Common.Models
             Message = message;
             Data = data;
         }
-        public ApiResponse(string message)
+        public ApiResponse(string? message)
         {
             Success = false;
             Message = message;

@@ -64,14 +64,14 @@ namespace Coursera.Api.Controllers
                 request.Level,
                 request.CategoryId,
                 request.InstructorId));
-            return Ok(new ApiResponse<object?>(null));
+            return Ok(new ApiResponse<object?>());
         }
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _mediator.Send(new DeleteCourseCommand(id));
-            return Ok(new ApiResponse<object?>(null));
+            return Ok(new ApiResponse<object?>());
         }
     }
 }

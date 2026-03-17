@@ -1,4 +1,4 @@
-﻿using Coursera.Domain.Common;
+using Coursera.Domain.Common;
 using Coursera.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,8 @@ namespace Coursera.Domain.Entities
 {
     public class Instructor : BaseEntity
     {
-        public string Name { get; protected set; }
-        public string Bio { get; protected set; }
+        public string Name { get; protected set; } = default!;
+        public string Bio { get; protected set; } = default!;
         public JobTitle JobTitle { get; protected set; }
         public string ImagePath { get; protected set; } = default!;
 

@@ -32,7 +32,7 @@ namespace Coursera.Api.Controllers
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                                 ?? throw new UnauthorizedAccessException("UserId not found in token"));
             await _mediator.Send(new AddToCartCommand(courseId, userId));
-            return Ok(new ApiResponse<object?>(null));
+            return Ok(new ApiResponse<object?>());
         }
         [HttpDelete("{courseId}")]
         public async Task<IActionResult> RemoveFromCart(Guid courseId)
@@ -40,7 +40,7 @@ namespace Coursera.Api.Controllers
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                                 ?? throw new UnauthorizedAccessException("UserId not found in token"));
             await _mediator.Send(new RemoveCartCommand(userId, courseId));
-            return Ok(new ApiResponse<object?>(null));
+            return Ok(new ApiResponse<object?>());
         }
     }
 }

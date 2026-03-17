@@ -38,7 +38,7 @@ namespace Coursera.Infrastructure.Service
             return new UserTokenDto
             {
                 Id = user.Id,
-                Email = user.Email,
+                Email = user.Email!,
                 Roles = roles
             };
         }
@@ -52,7 +52,7 @@ namespace Coursera.Infrastructure.Service
             return new UserTokenDto
             {
                 Id = user.Id,
-                Email = user.Email,
+                Email = user.Email!,
                 Roles = roles
             };
         }

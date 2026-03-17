@@ -1,4 +1,4 @@
-﻿using Coursera.Domain.Common;
+using Coursera.Domain.Common;
 using Coursera.Domain.Enums;
 using System.ComponentModel;
 
@@ -11,7 +11,7 @@ namespace Coursera.Domain.Entities
 
         public decimal  Price { get; private set; }
         public decimal Rating { get; private set; }
-        public string ImagePath{ get; private set; }
+        public string ImagePath{ get; private set; } = default!;
         public DateTime CreatedAt { get; private set; }
         public Level Level { get; private set; }
         public Category Category { get; private set; } = default!;
