@@ -2,8 +2,10 @@ using Coursera.Api.Middlewares;
 using Coursera.Application;
 using Coursera.Application.Common.Models;
 using Coursera.Infrastructure;
+using Coursera.Infrastructure.Data;
 using Coursera.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -79,6 +81,10 @@ var app = builder.Build();
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Byway API V1");
         c.RoutePrefix = "docs";
     });
+if(app.Environment.IsDevelopment()||app.Environment.IsProduction())
+{
+app.UseDeveloperExceptionPage();
+}
 
 using(var scope = app.Services.CreateScope())
 {
@@ -86,6 +92,8 @@ using(var scope = app.Services.CreateScope())
     var roleManager = service.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     var userManager = service.GetRequiredService<UserManager<ApplicationUser>>();
     await RoleSeeder.SeedAsync(roleManager, userManager);
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
