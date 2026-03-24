@@ -45,20 +45,20 @@ namespace Coursera.Api.Controllers
         }
         [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid Id,UpdateCategoryRequest request)
+        public async Task<IActionResult> Update(Guid id,UpdateCategoryRequest request)
         {
             var category = await _mediator.Send(new UpdateCategoryCommand(
-                Id,
+                id,
                 request.Name,
                 request.ImagePath));
             return Ok(new ApiResponse<object?>(category));
         }
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid Id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var category = await _mediator.Send(new DeleteCategoryCommand(
-                Id));
+                id));
             return Ok(new ApiResponse<object?>(category));
         }
     }
