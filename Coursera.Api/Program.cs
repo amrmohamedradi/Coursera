@@ -81,19 +81,35 @@ var app = builder.Build();
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Byway API V1");
         c.RoutePrefix = "docs";
     });
-if(app.Environment.IsDevelopment()||app.Environment.IsProduction())
+if(app.Environment.IsDevelopment())
 {
 app.UseDeveloperExceptionPage();
 }
 
-using(var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var service = scope.ServiceProvider;
-    var roleManager = service.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-    var userManager = service.GetRequiredService<UserManager<ApplicationUser>>();
-    await RoleSeeder.SeedAsync(roleManager, userManager);
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    var logger = service.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        logger.LogInformation("Applying migrations...");
+        db.Database.Migrate();
+        logger.LogInformation("Migrations applied successfully.");
+
+        var roleManager = service.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var userManager = service.GetRequiredService<UserManager<ApplicationUser>>();
+
+        logger.LogInformation("Seeding roles...");
+        await RoleSeeder.SeedAsync(roleManager, userManager);
+        logger.LogInformation("Seeding completed.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred during migration or seeding.");
+    }
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
