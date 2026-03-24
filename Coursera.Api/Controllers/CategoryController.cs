@@ -4,6 +4,7 @@ using Coursera.Application.Features.Categories.Commands.CreateCategory;
 using Coursera.Application.Features.Categories.Commands.DeleteCategory;
 using Coursera.Application.Features.Categories.Commands.UpdateCategory;
 using Coursera.Application.Features.Categories.Queries;
+using Coursera.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,41 +25,41 @@ namespace Coursera.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var course =  await _mediator.Send(new GetCategoryByIdQuery(id));
-            return Ok(new ApiResponse<object?>(course));
+            var category =  await _mediator.Send(new GetCategoryByIdQuery(id));
+            return Ok(new ApiResponse<object?>(category));
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var course = await _mediator.Send(new GetCategoriesQuery());
-            return Ok(new ApiResponse<object?>(course));
+            var category = await _mediator.Send(new GetCategoriesQuery());
+            return Ok(new ApiResponse<object?>(category));
         }
         [Authorize (Roles =Roles.Admin)]
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryRequest request)
         {
-            var course = await _mediator.Send(new CreateCategoryCommand(
+            var category = await _mediator.Send(new CreateCategoryCommand(
                 request.Name,
                 request.ImagePath));
-            return Ok(new ApiResponse<object?>(course));
+            return Ok(new ApiResponse<object?>(category));
         }
         [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid Id,UpdateCategoryRequest request)
         {
-            var course = await _mediator.Send(new UpdateCategoryCommand(
+            var category = await _mediator.Send(new UpdateCategoryCommand(
                 Id,
                 request.Name,
                 request.ImagePath));
-            return Ok(new ApiResponse<object?>(course));
+            return Ok(new ApiResponse<object?>(category));
         }
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid Id)
         {
-            var course = await _mediator.Send(new DeleteCategoryCommand(
+            var category = await _mediator.Send(new DeleteCategoryCommand(
                 Id));
-            return Ok(new ApiResponse<object?>(course));
+            return Ok(new ApiResponse<object?>(category));
         }
     }
 }

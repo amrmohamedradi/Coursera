@@ -22,7 +22,7 @@ namespace Coursera.Application.Features.Categories.Commands.UpdateCategory
         {
             var category = await _context.Categories.FirstOrDefaultAsync(i => i.Id == request.Id, cancellationToken);
             if (category == null)
-                throw new NotFoundException("Instructor not found");
+                throw new NotFoundException("category not found");
             category.Update(request.Name, request.ImagePath);
             await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
