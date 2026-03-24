@@ -16,9 +16,9 @@ namespace Coursera.Api.Controllers
             _mediator = mediator;
         }
         [HttpGet("{id}/similar")]
-        public async Task<IActionResult> GetSimilarCourses(Guid Id)
+        public async Task<IActionResult> GetSimilarCourses(Guid id)
         {
-            var result = await _mediator.Send(new GetSimilarCoursesQuery(Id));
+            var result = await _mediator.Send(new GetSimilarCoursesQuery(id));
 
             return Ok(new ApiResponse<object?>(result));
 

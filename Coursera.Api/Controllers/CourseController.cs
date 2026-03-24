@@ -20,9 +20,9 @@ namespace Coursera.Api.Controllers
             _mediator = mediator;
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid Id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var course = await _mediator.Send(new GetCourseByIdQuery(Id));
+            var course = await _mediator.Send(new GetCourseByIdQuery(id));
             return Ok(new ApiResponse<object?>(course));
         }
         [HttpGet]
