@@ -6,10 +6,12 @@ using Coursera.Infrastructure.Data;
 using Coursera.Infrastructure.Identity;
 using Coursera.Infrastructure.Service;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,6 +20,8 @@ public class AuthServiceTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
     private readonly ApplicationDbContext _context;
+    private readonly Mock<IConfiguration> _configurationMock;
+    private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
 
     public AuthServiceTests(ApplicationDbContext context)
     {
@@ -27,6 +31,8 @@ public class AuthServiceTests
             store.Object,
             null, null, null, null, null, null, null, null);
         _context = context;
+        _configurationMock = new Mock<IConfiguration>();
+        _httpClientFactoryMock = new Mock<IHttpClientFactory>();
     }
 
     [Fact]
@@ -43,7 +49,7 @@ public class AuthServiceTests
             .ReturnsAsync(true);
         _userManagerMock.Setup(x => x.GetRolesAsync(user))
             .ReturnsAsync(new List<string> { "User" });
-        var service = new AuthService(_userManagerMock.Object,_context);
+        var service = new AuthService(_userManagerMock.Object, _context, _configurationMock.Object, _httpClientFactoryMock.Object);
         var result = await service.LoginAsync(email, password);
         Assert.NotNull(result);
     }
@@ -55,7 +61,7 @@ public class AuthServiceTests
         _userManagerMock
             .Setup(x => x.FindByEmailAsync(email))
             .ReturnsAsync((ApplicationUser)null);
-        var service = new AuthService(_userManagerMock.Object, _context);
+        var service = new AuthService(_userManagerMock.Object, _context, _configurationMock.Object, _httpClientFactoryMock.Object);
         await Assert.ThrowsAsync<UnauthorizedException>(() =>
             service.LoginAsync(email, password));
     }
@@ -74,11 +80,13 @@ public class AuthServiceTests
         
         var service = new AuthService(
             _userManagerMock.Object,
-            _context
+            _context,
+            _configurationMock.Object,
+            _httpClientFactoryMock.Object
         );
         await service.SetRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiryTime);
         Assert.Single(user.RefreshTokens);
         Assert.Equal("valid-refresh-token", user.RefreshTokens.First().Token);
         Assert.Equal(refreshTokenExpiryTime, user.RefreshTokens.First().ExpiryDate);
     }
-}
+}

@@ -30,6 +30,7 @@ namespace Coursera.Infrastructure
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
+            services.AddHttpClient();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
 

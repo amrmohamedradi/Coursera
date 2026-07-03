@@ -1,4 +1,5 @@
 using Coursera.Application.Common.Models;
+using Coursera.Application.Features.Auth.ExternalLogin;
 using Coursera.Application.Features.Auth.Login;
 using Coursera.Application.Features.Auth.Refresh;
 using Coursera.Application.Features.Auth.Register;
@@ -33,6 +34,25 @@ namespace Coursera.Api.Controllers
 
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(new ApiResponse<object?>(result));
+        }
+
+        /// <summary>
+        /// Authenticates a user via an external provider (Google or Facebook).
+        /// The client must first obtain an ID token / access token from the provider's SDK
+        /// and pass it here. The server validates the token and returns a JWT + refresh token pair.
+        /// </summary>
+        /// <remarks>
+        /// POST /api/auth/external-login
+        /// {
+        ///   "provider": "google",   // or "facebook"
+        ///   "idToken": "&lt;token from provider SDK&gt;"
+        /// }
+        /// </remarks>
+        [HttpPost("external-login")]
+        public async Task<IActionResult> ExternalLogin([FromBody] ExternalLoginCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(new ApiResponse<object?>(result));

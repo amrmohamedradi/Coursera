@@ -4,6 +4,8 @@ using Coursera.Application.Common.Models;
 using Coursera.Infrastructure;
 using Coursera.Infrastructure.Data;
 using Coursera.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +22,7 @@ builder.Services.AddAuthentication(o =>
     o.DefaultAuthenticateScheme = "Bearer";
     o.DefaultChallengeScheme = "Bearer";
 
-})
+    })
     .AddJwtBearer("Bearer", o =>
     {
         o.TokenValidationParameters = new TokenValidationParameters
@@ -35,6 +37,18 @@ builder.Services.AddAuthentication(o =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!))
 
         };
+    })
+    // External provider schemes — registered for DI/config; actual token validation
+    // is performed server-side in AuthService.ExternalLoginAsync via provider APIs.
+    .AddGoogle(GoogleDefaults.AuthenticationScheme, o =>
+    {
+        o.ClientId = builder.Configuration["ExternalAuth:Google:ClientId"] ?? "REPLACE_WITH_GOOGLE_CLIENT_ID";
+        o.ClientSecret = builder.Configuration["ExternalAuth:Google:ClientSecret"] ?? "REPLACE_WITH_GOOGLE_CLIENT_SECRET";
+    })
+    .AddFacebook(FacebookDefaults.AuthenticationScheme, o =>
+    {
+        o.AppId = builder.Configuration["ExternalAuth:Facebook:AppId"] ?? "REPLACE_WITH_FACEBOOK_APP_ID";
+        o.AppSecret = builder.Configuration["ExternalAuth:Facebook:AppSecret"] ?? "REPLACE_WITH_FACEBOOK_APP_SECRET";
     });
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -68,10 +82,11 @@ builder.Services.AddSwaggerGen(o =>
 });
 builder.Services.AddCors(options =>
 {
-       options.AddPolicy("AllowAll", policy =>
-        policy.AllowAnyOrigin()
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("https://byway-lime.vercel.app")
               .AllowAnyMethod()
-              .AllowAnyHeader());
+              .AllowAnyHeader()
+              .AllowCredentials());
 });
 
 var app = builder.Build();
@@ -116,8 +131,8 @@ using (var scope = app.Services.CreateScope())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
