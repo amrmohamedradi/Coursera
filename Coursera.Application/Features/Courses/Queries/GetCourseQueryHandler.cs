@@ -26,7 +26,7 @@ namespace Coursera.Application.Features.Courses.Queries
                 var search = request.Search.ToLower();
                 query = query.Include(i => i.Category).Where(i => 
                     i.Name.ToLower().Contains(search) || 
-                    i.Category.Name.ToLower().Contains(search) ||
+                    (i.Category != null && i.Category.Name.ToLower().Contains(search)) ||
                     i.Price.ToString().Contains(search) ||
                     i.Rating.ToString().Contains(search));
             }
