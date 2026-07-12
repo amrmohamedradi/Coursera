@@ -1,4 +1,4 @@
-﻿using Coursera.Application.Common.Interfaces;
+using Coursera.Application.Common.Interfaces;
 using Coursera.Application.Features.Auth.Register;
 using Coursera.Application.Common.Models;
 using Coursera.Application.Interfaces;

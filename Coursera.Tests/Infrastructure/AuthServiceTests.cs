@@ -7,6 +7,8 @@ using Coursera.Infrastructure.Identity;
 using Coursera.Infrastructure.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
@@ -22,6 +24,7 @@ public class AuthServiceTests
     private readonly ApplicationDbContext _context;
     private readonly Mock<IConfiguration> _configurationMock;
     private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
+    private readonly ILogger<AuthService> _logger = NullLogger<AuthService>.Instance;
 
     public AuthServiceTests(ApplicationDbContext context)
     {
@@ -49,7 +52,7 @@ public class AuthServiceTests
             .ReturnsAsync(true);
         _userManagerMock.Setup(x => x.GetRolesAsync(user))
             .ReturnsAsync(new List<string> { "User" });
-        var service = new AuthService(_userManagerMock.Object, _context, _configurationMock.Object, _httpClientFactoryMock.Object);
+        var service = new AuthService(_userManagerMock.Object, _context, _configurationMock.Object, _httpClientFactoryMock.Object, _logger);
         var result = await service.LoginAsync(email, password);
         Assert.NotNull(result);
     }
@@ -61,7 +64,7 @@ public class AuthServiceTests
         _userManagerMock
             .Setup(x => x.FindByEmailAsync(email))
             .ReturnsAsync((ApplicationUser)null);
-        var service = new AuthService(_userManagerMock.Object, _context, _configurationMock.Object, _httpClientFactoryMock.Object);
+        var service = new AuthService(_userManagerMock.Object, _context, _configurationMock.Object, _httpClientFactoryMock.Object, _logger);
         await Assert.ThrowsAsync<UnauthorizedException>(() =>
             service.LoginAsync(email, password));
     }
@@ -82,7 +85,8 @@ public class AuthServiceTests
             _userManagerMock.Object,
             _context,
             _configurationMock.Object,
-            _httpClientFactoryMock.Object
+            _httpClientFactoryMock.Object,
+            _logger
         );
         await service.SetRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiryTime);
         Assert.Single(user.RefreshTokens);

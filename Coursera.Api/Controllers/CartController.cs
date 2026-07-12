@@ -11,6 +11,7 @@ namespace Coursera.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.User)]
     public class CartController : ControllerBase
     {
         private readonly IMediator _mediator;
