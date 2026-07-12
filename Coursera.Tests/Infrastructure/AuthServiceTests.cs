@@ -32,7 +32,7 @@ public class AuthServiceTests
 
         _userManagerMock = new Mock<UserManager<ApplicationUser>>(
             store.Object,
-            null, null, null, null, null, null, null, null);
+            null!, null!, null!, null!, null!, null!, null!, null!, null!);
         _context = context;
         _configurationMock = new Mock<IConfiguration>();
         _httpClientFactoryMock = new Mock<IHttpClientFactory>();
@@ -63,7 +63,7 @@ public class AuthServiceTests
         var password = "Password123!";
         _userManagerMock
             .Setup(x => x.FindByEmailAsync(email))
-            .ReturnsAsync((ApplicationUser)null);
+            .ReturnsAsync((ApplicationUser?)null);
         var service = new AuthService(_userManagerMock.Object, _context, _configurationMock.Object, _httpClientFactoryMock.Object, _logger);
         await Assert.ThrowsAsync<UnauthorizedException>(() =>
             service.LoginAsync(email, password));
