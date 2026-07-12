@@ -1,0 +1,58 @@
+name: CI – Build & Test
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TRIGGERS
+# Run this workflow on every push to master AND on every pull request that
+# targets master. This means GitHub will show a red ✗ or green ✓ on each
+# commit and each PR automatically.
+# ─────────────────────────────────────────────────────────────────────────────
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    # The virtual machine GitHub provides for free to run the steps below.
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Step 1: Checkout ──────────────────────────────────────────────────
+      # Downloads your repository code onto the runner machine so the
+      # subsequent steps can see your files.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: Setup .NET SDK ────────────────────────────────────────────
+      # Installs the exact .NET 8 SDK on the runner. Without this step the
+      # machine would not know how to run `dotnet` commands.
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # ── Step 3: Restore NuGet packages ───────────────────────────────────
+      # Downloads all NuGet packages declared in your .csproj files (xUnit,
+      # Moq, FluentAssertions, MediatR, etc.) from nuget.org. This is the
+      # equivalent of right-clicking "Restore NuGet Packages" in Visual Studio.
+      - name: Restore dependencies
+        run: dotnet restore Coursera.slnx
+
+      # ── Step 4: Build the solution ────────────────────────────────────────
+      # Compiles every project in the solution in Release mode.
+      # --no-restore skips a second restore because we already did it above.
+      # If any project fails to compile, this step fails and the whole
+      # workflow stops with a clear red ✗.
+      - name: Build
+        run: dotnet build Coursera.slnx --configuration Release --no-restore
+
+      # ── Step 5: Run tests ─────────────────────────────────────────────────
+      # Executes every [Fact] and [Theory] inside Coursera.Tests.
+      # --no-build skips a redundant rebuild since Step 4 already compiled.
+      # --verbosity normal prints each test name and result so you can
+      # immediately see which test failed in the GitHub Actions log.
+      # If even one test fails, this step exits with a non-zero code and
+      # GitHub marks the commit/PR as failed.
+      - name: Run tests
+        run: dotnet test Coursera.Tests/Coursera.Tests.csproj --configuration Release --no-build --verbosity normal
