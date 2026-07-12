@@ -99,7 +99,6 @@ namespace Coursera.Infrastructure.Service
                 ExpiryDate = refreshTokenExpiryTime,
                 IsRevoked = false,
                 UserId = userId,
-                ApplicationUserId = userId
             };
 
             await _context.RefreshTokens.AddAsync(token);
