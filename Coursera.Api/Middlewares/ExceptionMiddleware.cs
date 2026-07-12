@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using Coursera.Application.Common.Exceptions;
 
@@ -8,11 +8,13 @@ namespace Coursera.Api.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
+
         public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
         }
+
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -26,17 +28,25 @@ namespace Coursera.Api.Middlewares
 
                 context.Response.StatusCode = ex switch
                 {
-                    ValidationException => (int)HttpStatusCode.BadRequest,
+                    ValidationException  => (int)HttpStatusCode.BadRequest,
                     UnauthorizedException => (int)HttpStatusCode.Unauthorized,
-                    NotFoundException => (int)HttpStatusCode.NotFound,
-                    _ => (int)HttpStatusCode.InternalServerError
+                    NotFoundException    => (int)HttpStatusCode.NotFound,
+                    _                    => (int)HttpStatusCode.InternalServerError
                 };
-                var response = new
+
+                // For ValidationException surface the structured Errors map so
+                // the client knows exactly which fields failed and why.
+                object response = ex is ValidationException ve
+                    ? new { message = ve.Message, errors = ve.Errors }
+                    : new { message = ex.Message };
+
+                var options = new JsonSerializerOptions
                 {
-                    message = ex.Message
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 };
-                var json = JsonSerializer.Serialize(response);
-                await context.Response.WriteAsync(json);    
+
+                var json = JsonSerializer.Serialize(response, options);
+                await context.Response.WriteAsync(json);
             }
         }
     }

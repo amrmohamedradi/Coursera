@@ -1,8 +1,10 @@
+using Coursera.Application.Common.Constans;
 using Coursera.Application.Features.Carts.Commands.AddToCart;
 using Coursera.Application.Features.Carts.Commands.RemoveCart;
 using Coursera.Application.Features.Carts.Queries.GetCart;
 using Coursera.Application.Common.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
